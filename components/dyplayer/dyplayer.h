@@ -15,7 +15,6 @@ enum EqPreset {
   ROCK = 2,
   JAZZ = 3,
   CLASSIC = 4,
-  BASS = 5,
 };
 
 enum Device {
@@ -24,7 +23,8 @@ enum Device {
 };
 
 // See the datasheet here:
-// https://github.com/DFRobot/DFRobotDFPlayerMini/blob/master/doc/FN-M16P%2BEmbedded%2BMP3%2BAudio%2BModule%2BDatasheet.pdf
+// https://grobotronics.com/images/companies/1/datasheets/DY-SV5W%20Voice%20Playback%20ModuleDatasheet.pdf
+// and https://github.com/SnijderC/dyplayer
 class DYPlayer : public uart::UARTDevice, public Component {
  public:
   void loop() override;
@@ -56,14 +56,24 @@ class DYPlayer : public uart::UARTDevice, public Component {
   }
 
  protected:
-  void send_cmd_(uint8_t cmd, uint16_t argument = 0);
-  void send_cmd_(uint8_t cmd, uint16_t high, uint16_t low) {
-    this->send_cmd_(cmd, ((high & 0xFF) << 8) | (low & 0xFF));
+  void send_cmd_(uint8_t cmd, uint8_t *data = {}, uint8_t len = 0);
+  void send_cmd_(uint8_t cmd, uint8_t arg1) {
+    uint8_t buffer[1]{arg1};
+    this->send_cmd_(cmd, buffer, 1);
+  }
+  void send_cmd_(uint8_t cmd, uint16_t arg1) {
+    uint8_t buffer[2]{(uint8_t) (arg1 >> 8), (uint8_t) arg1};
+    this->send_cmd_(cmd, buffer, 2);
+  }
+  void send_cmd_(uint8_t cmd, uint8_t arg1, uint8_t arg2) {
+    uint8_t buffer[2]{arg1, arg2};
+    this->send_cmd_(cmd, buffer, 2);
   }
   uint8_t sent_cmd_{0};
 
   char read_buffer_[DYPLAYER_READ_BUFFER_LENGTH];
   size_t read_pos_{0};
+  size_t in_len_{0};
 
   bool is_playing_{false};
   bool ack_set_is_playing_{false};

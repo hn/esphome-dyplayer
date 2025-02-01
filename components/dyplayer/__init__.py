@@ -5,7 +5,7 @@ from esphome.const import CONF_ID, CONF_TRIGGER_ID, CONF_FILE, CONF_DEVICE, CONF
 from esphome.components import uart
 
 DEPENDENCIES = ["uart"]
-CODEOWNERS = ["@glmnet"]
+CODEOWNERS = ["@hn"]
 
 dyplayer_ns = cg.esphome_ns.namespace("dyplayer")
 DYPlayer = dyplayer_ns.class_("DYPlayer", cg.Component)
@@ -29,7 +29,6 @@ EQ_PRESET = {
     "ROCK": EqPreset.ROCK,
     "JAZZ": EqPreset.JAZZ,
     "CLASSIC": EqPreset.CLASSIC,
-    "BASS": EqPreset.BASS,
 }
 Device = dyplayer_ns.enum("Device")
 DEVICE = {
