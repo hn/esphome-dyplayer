@@ -4,10 +4,10 @@
 #include "esphome/components/uart/uart.h"
 #include "esphome/core/automation.h"
 
-const size_t DFPLAYER_READ_BUFFER_LENGTH = 25;  // two messages + some extra
+const size_t DYPLAYER_READ_BUFFER_LENGTH = 25;  // two messages + some extra
 
 namespace esphome {
-namespace dfplayer {
+namespace dyplayer {
 
 enum EqPreset {
   NORMAL = 0,
@@ -25,7 +25,7 @@ enum Device {
 
 // See the datasheet here:
 // https://github.com/DFRobot/DFRobotDFPlayerMini/blob/master/doc/FN-M16P%2BEmbedded%2BMP3%2BAudio%2BModule%2BDatasheet.pdf
-class DFPlayer : public uart::UARTDevice, public Component {
+class DYPlayer : public uart::UARTDevice, public Component {
  public:
   void loop() override;
 
@@ -62,7 +62,7 @@ class DFPlayer : public uart::UARTDevice, public Component {
   }
   uint8_t sent_cmd_{0};
 
-  char read_buffer_[DFPLAYER_READ_BUFFER_LENGTH];
+  char read_buffer_[DYPLAYER_READ_BUFFER_LENGTH];
   size_t read_pos_{0};
 
   bool is_playing_{false};
@@ -72,18 +72,18 @@ class DFPlayer : public uart::UARTDevice, public Component {
   CallbackManager<void()> on_finished_playback_callback_;
 };
 
-#define DFPLAYER_SIMPLE_ACTION(ACTION_CLASS, ACTION_METHOD) \
+#define DYPLAYER_SIMPLE_ACTION(ACTION_CLASS, ACTION_METHOD) \
   template<typename... Ts> \
   class ACTION_CLASS : /* NOLINT */ \
                        public Action<Ts...>, \
-                       public Parented<DFPlayer> { \
+                       public Parented<DYPlayer> { \
     void play(Ts... x) override { this->parent_->ACTION_METHOD(); } \
   };
 
-DFPLAYER_SIMPLE_ACTION(NextAction, next)
-DFPLAYER_SIMPLE_ACTION(PreviousAction, previous)
+DYPLAYER_SIMPLE_ACTION(NextAction, next)
+DYPLAYER_SIMPLE_ACTION(PreviousAction, previous)
 
-template<typename... Ts> class PlayMp3Action : public Action<Ts...>, public Parented<DFPlayer> {
+template<typename... Ts> class PlayMp3Action : public Action<Ts...>, public Parented<DYPlayer> {
  public:
   TEMPLATABLE_VALUE(uint16_t, file)
 
@@ -93,7 +93,7 @@ template<typename... Ts> class PlayMp3Action : public Action<Ts...>, public Pare
   }
 };
 
-template<typename... Ts> class PlayFileAction : public Action<Ts...>, public Parented<DFPlayer> {
+template<typename... Ts> class PlayFileAction : public Action<Ts...>, public Parented<DYPlayer> {
  public:
   TEMPLATABLE_VALUE(uint16_t, file)
   TEMPLATABLE_VALUE(bool, loop)
@@ -109,7 +109,7 @@ template<typename... Ts> class PlayFileAction : public Action<Ts...>, public Par
   }
 };
 
-template<typename... Ts> class PlayFolderAction : public Action<Ts...>, public Parented<DFPlayer> {
+template<typename... Ts> class PlayFolderAction : public Action<Ts...>, public Parented<DYPlayer> {
  public:
   TEMPLATABLE_VALUE(uint16_t, folder)
   TEMPLATABLE_VALUE(uint16_t, file)
@@ -127,7 +127,7 @@ template<typename... Ts> class PlayFolderAction : public Action<Ts...>, public P
   }
 };
 
-template<typename... Ts> class SetDeviceAction : public Action<Ts...>, public Parented<DFPlayer> {
+template<typename... Ts> class SetDeviceAction : public Action<Ts...>, public Parented<DYPlayer> {
  public:
   TEMPLATABLE_VALUE(Device, device)
 
@@ -137,7 +137,7 @@ template<typename... Ts> class SetDeviceAction : public Action<Ts...>, public Pa
   }
 };
 
-template<typename... Ts> class SetVolumeAction : public Action<Ts...>, public Parented<DFPlayer> {
+template<typename... Ts> class SetVolumeAction : public Action<Ts...>, public Parented<DYPlayer> {
  public:
   TEMPLATABLE_VALUE(uint8_t, volume)
 
@@ -147,7 +147,7 @@ template<typename... Ts> class SetVolumeAction : public Action<Ts...>, public Pa
   }
 };
 
-template<typename... Ts> class SetEqAction : public Action<Ts...>, public Parented<DFPlayer> {
+template<typename... Ts> class SetEqAction : public Action<Ts...>, public Parented<DYPlayer> {
  public:
   TEMPLATABLE_VALUE(EqPreset, eq)
 
@@ -157,26 +157,26 @@ template<typename... Ts> class SetEqAction : public Action<Ts...>, public Parent
   }
 };
 
-DFPLAYER_SIMPLE_ACTION(SleepAction, sleep)
-DFPLAYER_SIMPLE_ACTION(ResetAction, reset)
-DFPLAYER_SIMPLE_ACTION(StartAction, start)
-DFPLAYER_SIMPLE_ACTION(PauseAction, pause)
-DFPLAYER_SIMPLE_ACTION(StopAction, stop)
-DFPLAYER_SIMPLE_ACTION(RandomAction, random)
-DFPLAYER_SIMPLE_ACTION(VolumeUpAction, volume_up)
-DFPLAYER_SIMPLE_ACTION(VolumeDownAction, volume_down)
+DYPLAYER_SIMPLE_ACTION(SleepAction, sleep)
+DYPLAYER_SIMPLE_ACTION(ResetAction, reset)
+DYPLAYER_SIMPLE_ACTION(StartAction, start)
+DYPLAYER_SIMPLE_ACTION(PauseAction, pause)
+DYPLAYER_SIMPLE_ACTION(StopAction, stop)
+DYPLAYER_SIMPLE_ACTION(RandomAction, random)
+DYPLAYER_SIMPLE_ACTION(VolumeUpAction, volume_up)
+DYPLAYER_SIMPLE_ACTION(VolumeDownAction, volume_down)
 
-template<typename... Ts> class DFPlayerIsPlayingCondition : public Condition<Ts...>, public Parented<DFPlayer> {
+template<typename... Ts> class DYPlayerIsPlayingCondition : public Condition<Ts...>, public Parented<DYPlayer> {
  public:
   bool check(Ts... x) override { return this->parent_->is_playing(); }
 };
 
-class DFPlayerFinishedPlaybackTrigger : public Trigger<> {
+class DYPlayerFinishedPlaybackTrigger : public Trigger<> {
  public:
-  explicit DFPlayerFinishedPlaybackTrigger(DFPlayer *parent) {
+  explicit DYPlayerFinishedPlaybackTrigger(DYPlayer *parent) {
     parent->add_on_finished_playback_callback([this]() { this->trigger(); });
   }
 };
 
-}  // namespace dfplayer
+}  // namespace dyplayer
 }  // namespace esphome

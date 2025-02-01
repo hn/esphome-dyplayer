@@ -1,108 +1,108 @@
-#include "dfplayer.h"
+#include "dyplayer.h"
 #include "esphome/core/log.h"
 
 namespace esphome {
-namespace dfplayer {
+namespace dyplayer {
 
-static const char *const TAG = "dfplayer";
+static const char *const TAG = "dyplayer";
 
-void DFPlayer::next() {
+void DYPlayer::next() {
   this->ack_set_is_playing_ = true;
   ESP_LOGD(TAG, "Playing next track");
   this->send_cmd_(0x01);
 }
 
-void DFPlayer::previous() {
+void DYPlayer::previous() {
   this->ack_set_is_playing_ = true;
   ESP_LOGD(TAG, "Playing previous track");
   this->send_cmd_(0x02);
 }
-void DFPlayer::play_mp3(uint16_t file) {
+void DYPlayer::play_mp3(uint16_t file) {
   this->ack_set_is_playing_ = true;
   ESP_LOGD(TAG, "Playing file %d in mp3 folder", file);
   this->send_cmd_(0x12, file);
 }
 
-void DFPlayer::play_file(uint16_t file) {
+void DYPlayer::play_file(uint16_t file) {
   this->ack_set_is_playing_ = true;
   ESP_LOGD(TAG, "Playing file %d", file);
   this->send_cmd_(0x03, file);
 }
 
-void DFPlayer::play_file_loop(uint16_t file) {
+void DYPlayer::play_file_loop(uint16_t file) {
   this->ack_set_is_playing_ = true;
   ESP_LOGD(TAG, "Playing file %d in loop", file);
   this->send_cmd_(0x08, file);
 }
 
-void DFPlayer::play_folder_loop(uint16_t folder) {
+void DYPlayer::play_folder_loop(uint16_t folder) {
   this->ack_set_is_playing_ = true;
   ESP_LOGD(TAG, "Playing folder %d in loop", folder);
   this->send_cmd_(0x17, folder);
 }
 
-void DFPlayer::volume_up() {
+void DYPlayer::volume_up() {
   ESP_LOGD(TAG, "Increasing volume");
   this->send_cmd_(0x04);
 }
 
-void DFPlayer::volume_down() {
+void DYPlayer::volume_down() {
   ESP_LOGD(TAG, "Decreasing volume");
   this->send_cmd_(0x05);
 }
 
-void DFPlayer::set_device(Device device) {
+void DYPlayer::set_device(Device device) {
   ESP_LOGD(TAG, "Setting device to %d", device);
   this->send_cmd_(0x09, device);
 }
 
-void DFPlayer::set_volume(uint8_t volume) {
+void DYPlayer::set_volume(uint8_t volume) {
   ESP_LOGD(TAG, "Setting volume to %d", volume);
   this->send_cmd_(0x06, volume);
 }
 
-void DFPlayer::set_eq(EqPreset preset) {
+void DYPlayer::set_eq(EqPreset preset) {
   ESP_LOGD(TAG, "Setting EQ to %d", preset);
   this->send_cmd_(0x07, preset);
 }
 
-void DFPlayer::sleep() {
+void DYPlayer::sleep() {
   this->ack_reset_is_playing_ = true;
-  ESP_LOGD(TAG, "Putting DFPlayer to sleep");
+  ESP_LOGD(TAG, "Putting DYPlayer to sleep");
   this->send_cmd_(0x0A);
 }
 
-void DFPlayer::reset() {
+void DYPlayer::reset() {
   this->ack_reset_is_playing_ = true;
-  ESP_LOGD(TAG, "Resetting DFPlayer");
+  ESP_LOGD(TAG, "Resetting DYPlayer");
   this->send_cmd_(0x0C);
 }
 
-void DFPlayer::start() {
+void DYPlayer::start() {
   this->ack_set_is_playing_ = true;
   ESP_LOGD(TAG, "Starting playback");
   this->send_cmd_(0x0D);
 }
 
-void DFPlayer::pause() {
+void DYPlayer::pause() {
   this->ack_reset_is_playing_ = true;
   ESP_LOGD(TAG, "Pausing playback");
   this->send_cmd_(0x0E);
 }
 
-void DFPlayer::stop() {
+void DYPlayer::stop() {
   this->ack_reset_is_playing_ = true;
   ESP_LOGD(TAG, "Stopping playback");
   this->send_cmd_(0x16);
 }
 
-void DFPlayer::random() {
+void DYPlayer::random() {
   this->ack_set_is_playing_ = true;
   ESP_LOGD(TAG, "Playing random file");
   this->send_cmd_(0x18);
 }
 
-void DFPlayer::play_folder(uint16_t folder, uint16_t file) {
+void DYPlayer::play_folder(uint16_t folder, uint16_t file) {
   ESP_LOGD(TAG, "Playing file %d in folder %d", file, folder);
   if (folder < 100 && file < 256) {
     this->ack_set_is_playing_ = true;
@@ -115,7 +115,7 @@ void DFPlayer::play_folder(uint16_t folder, uint16_t file) {
   }
 }
 
-void DFPlayer::send_cmd_(uint8_t cmd, uint16_t argument) {
+void DYPlayer::send_cmd_(uint8_t cmd, uint16_t argument) {
   uint8_t buffer[10]{0x7e, 0xff, 0x06, cmd, 0x01, (uint8_t) (argument >> 8), (uint8_t) argument, 0x00, 0x00, 0xef};
   uint16_t checksum = 0;
   for (uint8_t i = 1; i < 7; i++)
@@ -130,13 +130,13 @@ void DFPlayer::send_cmd_(uint8_t cmd, uint16_t argument) {
   this->write_array(buffer, 10);
 }
 
-void DFPlayer::loop() {
+void DYPlayer::loop() {
   // Read message
   while (this->available()) {
     uint8_t byte;
     this->read_byte(&byte);
 
-    if (this->read_pos_ == DFPLAYER_READ_BUFFER_LENGTH)
+    if (this->read_pos_ == DYPLAYER_READ_BUFFER_LENGTH)
       this->read_pos_ = 0;
 
     switch (this->read_pos_) {
@@ -267,10 +267,10 @@ void DFPlayer::loop() {
     this->read_pos_++;
   }
 }
-void DFPlayer::dump_config() {
-  ESP_LOGCONFIG(TAG, "DFPlayer:");
+void DYPlayer::dump_config() {
+  ESP_LOGCONFIG(TAG, "DYPlayer:");
   this->check_uart_settings(9600);
 }
 
-}  // namespace dfplayer
+}  // namespace dyplayer
 }  // namespace esphome

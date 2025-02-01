@@ -7,13 +7,13 @@ from esphome.components import uart
 DEPENDENCIES = ["uart"]
 CODEOWNERS = ["@glmnet"]
 
-dfplayer_ns = cg.esphome_ns.namespace("dfplayer")
-DFPlayer = dfplayer_ns.class_("DFPlayer", cg.Component)
-DFPlayerFinishedPlaybackTrigger = dfplayer_ns.class_(
-    "DFPlayerFinishedPlaybackTrigger", automation.Trigger.template()
+dyplayer_ns = cg.esphome_ns.namespace("dyplayer")
+DYPlayer = dyplayer_ns.class_("DYPlayer", cg.Component)
+DYPlayerFinishedPlaybackTrigger = dyplayer_ns.class_(
+    "DYPlayerFinishedPlaybackTrigger", automation.Trigger.template()
 )
-DFPlayerIsPlayingCondition = dfplayer_ns.class_(
-    "DFPlayerIsPlayingCondition", automation.Condition
+DYPlayerIsPlayingCondition = dyplayer_ns.class_(
+    "DYPlayerIsPlayingCondition", automation.Condition
 )
 
 MULTI_CONF = True
@@ -22,7 +22,7 @@ CONF_LOOP = "loop"
 CONF_EQ_PRESET = "eq_preset"
 CONF_ON_FINISHED_PLAYBACK = "on_finished_playback"
 
-EqPreset = dfplayer_ns.enum("EqPreset")
+EqPreset = dyplayer_ns.enum("EqPreset")
 EQ_PRESET = {
     "NORMAL": EqPreset.NORMAL,
     "POP": EqPreset.POP,
@@ -31,37 +31,37 @@ EQ_PRESET = {
     "CLASSIC": EqPreset.CLASSIC,
     "BASS": EqPreset.BASS,
 }
-Device = dfplayer_ns.enum("Device")
+Device = dyplayer_ns.enum("Device")
 DEVICE = {
     "USB": Device.USB,
     "TF_CARD": Device.TF_CARD,
 }
 
-NextAction = dfplayer_ns.class_("NextAction", automation.Action)
-PreviousAction = dfplayer_ns.class_("PreviousAction", automation.Action)
-PlayMp3Action = dfplayer_ns.class_("PlayMp3Action", automation.Action)
-PlayFileAction = dfplayer_ns.class_("PlayFileAction", automation.Action)
-PlayFolderAction = dfplayer_ns.class_("PlayFolderAction", automation.Action)
-SetVolumeAction = dfplayer_ns.class_("SetVolumeAction", automation.Action)
-VolumeUpAction = dfplayer_ns.class_("VolumeUpAction", automation.Action)
-VolumeDownAction = dfplayer_ns.class_("VolumeDownAction", automation.Action)
-SetEqAction = dfplayer_ns.class_("SetEqAction", automation.Action)
-SleepAction = dfplayer_ns.class_("SleepAction", automation.Action)
-ResetAction = dfplayer_ns.class_("ResetAction", automation.Action)
-StartAction = dfplayer_ns.class_("StartAction", automation.Action)
-PauseAction = dfplayer_ns.class_("PauseAction", automation.Action)
-StopAction = dfplayer_ns.class_("StopAction", automation.Action)
-RandomAction = dfplayer_ns.class_("RandomAction", automation.Action)
-SetDeviceAction = dfplayer_ns.class_("SetDeviceAction", automation.Action)
+NextAction = dyplayer_ns.class_("NextAction", automation.Action)
+PreviousAction = dyplayer_ns.class_("PreviousAction", automation.Action)
+PlayMp3Action = dyplayer_ns.class_("PlayMp3Action", automation.Action)
+PlayFileAction = dyplayer_ns.class_("PlayFileAction", automation.Action)
+PlayFolderAction = dyplayer_ns.class_("PlayFolderAction", automation.Action)
+SetVolumeAction = dyplayer_ns.class_("SetVolumeAction", automation.Action)
+VolumeUpAction = dyplayer_ns.class_("VolumeUpAction", automation.Action)
+VolumeDownAction = dyplayer_ns.class_("VolumeDownAction", automation.Action)
+SetEqAction = dyplayer_ns.class_("SetEqAction", automation.Action)
+SleepAction = dyplayer_ns.class_("SleepAction", automation.Action)
+ResetAction = dyplayer_ns.class_("ResetAction", automation.Action)
+StartAction = dyplayer_ns.class_("StartAction", automation.Action)
+PauseAction = dyplayer_ns.class_("PauseAction", automation.Action)
+StopAction = dyplayer_ns.class_("StopAction", automation.Action)
+RandomAction = dyplayer_ns.class_("RandomAction", automation.Action)
+SetDeviceAction = dyplayer_ns.class_("SetDeviceAction", automation.Action)
 
 CONFIG_SCHEMA = cv.All(
     cv.Schema(
         {
-            cv.GenerateID(): cv.declare_id(DFPlayer),
+            cv.GenerateID(): cv.declare_id(DYPlayer),
             cv.Optional(CONF_ON_FINISHED_PLAYBACK): automation.validate_automation(
                 {
                     cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(
-                        DFPlayerFinishedPlaybackTrigger
+                        DYPlayerFinishedPlaybackTrigger
                     ),
                 }
             ),
@@ -69,7 +69,7 @@ CONFIG_SCHEMA = cv.All(
     ).extend(uart.UART_DEVICE_SCHEMA)
 )
 FINAL_VALIDATE_SCHEMA = uart.final_validate_device_schema(
-    "dfplayer", baud_rate=9600, require_tx=True
+    "dyplayer", baud_rate=9600, require_tx=True
 )
 
 
@@ -84,47 +84,47 @@ async def to_code(config):
 
 
 @automation.register_action(
-    "dfplayer.play_next",
+    "dyplayer.play_next",
     NextAction,
     cv.Schema(
         {
-            cv.GenerateID(): cv.use_id(DFPlayer),
+            cv.GenerateID(): cv.use_id(DYPlayer),
         }
     ),
 )
-async def dfplayer_next_to_code(config, action_id, template_arg, args):
+async def dyplayer_next_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     return var
 
 
 @automation.register_action(
-    "dfplayer.play_previous",
+    "dyplayer.play_previous",
     PreviousAction,
     cv.Schema(
         {
-            cv.GenerateID(): cv.use_id(DFPlayer),
+            cv.GenerateID(): cv.use_id(DYPlayer),
         }
     ),
 )
-async def dfplayer_previous_to_code(config, action_id, template_arg, args):
+async def dyplayer_previous_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     return var
 
 
 @automation.register_action(
-    "dfplayer.play_mp3",
+    "dyplayer.play_mp3",
     PlayMp3Action,
     cv.maybe_simple_value(
         {
-            cv.GenerateID(): cv.use_id(DFPlayer),
+            cv.GenerateID(): cv.use_id(DYPlayer),
             cv.Required(CONF_FILE): cv.templatable(cv.int_),
         },
         key=CONF_FILE,
     ),
 )
-async def dfplayer_play_mp3_to_code(config, action_id, template_arg, args):
+async def dyplayer_play_mp3_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     template_ = await cg.templatable(config[CONF_FILE], args, float)
@@ -133,18 +133,18 @@ async def dfplayer_play_mp3_to_code(config, action_id, template_arg, args):
 
 
 @automation.register_action(
-    "dfplayer.play",
+    "dyplayer.play",
     PlayFileAction,
     cv.maybe_simple_value(
         {
-            cv.GenerateID(): cv.use_id(DFPlayer),
+            cv.GenerateID(): cv.use_id(DYPlayer),
             cv.Required(CONF_FILE): cv.templatable(cv.int_),
             cv.Optional(CONF_LOOP): cv.templatable(cv.boolean),
         },
         key=CONF_FILE,
     ),
 )
-async def dfplayer_play_to_code(config, action_id, template_arg, args):
+async def dyplayer_play_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     template_ = await cg.templatable(config[CONF_FILE], args, float)
@@ -156,18 +156,18 @@ async def dfplayer_play_to_code(config, action_id, template_arg, args):
 
 
 @automation.register_action(
-    "dfplayer.play_folder",
+    "dyplayer.play_folder",
     PlayFolderAction,
     cv.Schema(
         {
-            cv.GenerateID(): cv.use_id(DFPlayer),
+            cv.GenerateID(): cv.use_id(DYPlayer),
             cv.Required(CONF_FOLDER): cv.templatable(cv.int_),
             cv.Optional(CONF_FILE): cv.templatable(cv.int_),
             cv.Optional(CONF_LOOP): cv.templatable(cv.boolean),
         }
     ),
 )
-async def dfplayer_play_folder_to_code(config, action_id, template_arg, args):
+async def dyplayer_play_folder_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     template_ = await cg.templatable(config[CONF_FOLDER], args, float)
@@ -182,17 +182,17 @@ async def dfplayer_play_folder_to_code(config, action_id, template_arg, args):
 
 
 @automation.register_action(
-    "dfplayer.set_device",
+    "dyplayer.set_device",
     SetDeviceAction,
     cv.maybe_simple_value(
         {
-            cv.GenerateID(): cv.use_id(DFPlayer),
+            cv.GenerateID(): cv.use_id(DYPlayer),
             cv.Required(CONF_DEVICE): cv.enum(DEVICE, upper=True),
         },
         key=CONF_DEVICE,
     ),
 )
-async def dfplayer_set_device_to_code(config, action_id, template_arg, args):
+async def dyplayer_set_device_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     template_ = await cg.templatable(config[CONF_DEVICE], args, Device)
@@ -201,17 +201,17 @@ async def dfplayer_set_device_to_code(config, action_id, template_arg, args):
 
 
 @automation.register_action(
-    "dfplayer.set_volume",
+    "dyplayer.set_volume",
     SetVolumeAction,
     cv.maybe_simple_value(
         {
-            cv.GenerateID(): cv.use_id(DFPlayer),
+            cv.GenerateID(): cv.use_id(DYPlayer),
             cv.Required(CONF_VOLUME): cv.templatable(cv.int_),
         },
         key=CONF_VOLUME,
     ),
 )
-async def dfplayer_set_volume_to_code(config, action_id, template_arg, args):
+async def dyplayer_set_volume_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     template_ = await cg.templatable(config[CONF_VOLUME], args, float)
@@ -220,47 +220,47 @@ async def dfplayer_set_volume_to_code(config, action_id, template_arg, args):
 
 
 @automation.register_action(
-    "dfplayer.volume_up",
+    "dyplayer.volume_up",
     VolumeUpAction,
     cv.Schema(
         {
-            cv.GenerateID(): cv.use_id(DFPlayer),
+            cv.GenerateID(): cv.use_id(DYPlayer),
         }
     ),
 )
-async def dfplayer_volume_up_to_code(config, action_id, template_arg, args):
+async def dyplayer_volume_up_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     return var
 
 
 @automation.register_action(
-    "dfplayer.volume_down",
+    "dyplayer.volume_down",
     VolumeDownAction,
     cv.Schema(
         {
-            cv.GenerateID(): cv.use_id(DFPlayer),
+            cv.GenerateID(): cv.use_id(DYPlayer),
         }
     ),
 )
-async def dfplayer_volume_down_to_code(config, action_id, template_arg, args):
+async def dyplayer_volume_down_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     return var
 
 
 @automation.register_action(
-    "dfplayer.set_eq",
+    "dyplayer.set_eq",
     SetEqAction,
     cv.maybe_simple_value(
         {
-            cv.GenerateID(): cv.use_id(DFPlayer),
+            cv.GenerateID(): cv.use_id(DYPlayer),
             cv.Required(CONF_EQ_PRESET): cv.templatable(cv.enum(EQ_PRESET, upper=True)),
         },
         key=CONF_EQ_PRESET,
     ),
 )
-async def dfplayer_set_eq_to_code(config, action_id, template_arg, args):
+async def dyplayer_set_eq_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     template_ = await cg.templatable(config[CONF_EQ_PRESET], args, EqPreset)
@@ -269,105 +269,105 @@ async def dfplayer_set_eq_to_code(config, action_id, template_arg, args):
 
 
 @automation.register_action(
-    "dfplayer.sleep",
+    "dyplayer.sleep",
     SleepAction,
     cv.Schema(
         {
-            cv.GenerateID(): cv.use_id(DFPlayer),
+            cv.GenerateID(): cv.use_id(DYPlayer),
         }
     ),
 )
-async def dfplayer_sleep_to_code(config, action_id, template_arg, args):
+async def dyplayer_sleep_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     return var
 
 
 @automation.register_action(
-    "dfplayer.reset",
+    "dyplayer.reset",
     ResetAction,
     cv.Schema(
         {
-            cv.GenerateID(): cv.use_id(DFPlayer),
+            cv.GenerateID(): cv.use_id(DYPlayer),
         }
     ),
 )
-async def dfplayer_reset_to_code(config, action_id, template_arg, args):
+async def dyplayer_reset_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     return var
 
 
 @automation.register_action(
-    "dfplayer.start",
+    "dyplayer.start",
     StartAction,
     cv.Schema(
         {
-            cv.GenerateID(): cv.use_id(DFPlayer),
+            cv.GenerateID(): cv.use_id(DYPlayer),
         }
     ),
 )
-async def dfplayer_start_to_code(config, action_id, template_arg, args):
+async def dyplayer_start_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     return var
 
 
 @automation.register_action(
-    "dfplayer.pause",
+    "dyplayer.pause",
     PauseAction,
     cv.Schema(
         {
-            cv.GenerateID(): cv.use_id(DFPlayer),
+            cv.GenerateID(): cv.use_id(DYPlayer),
         }
     ),
 )
-async def dfplayer_pause_to_code(config, action_id, template_arg, args):
+async def dyplayer_pause_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     return var
 
 
 @automation.register_action(
-    "dfplayer.stop",
+    "dyplayer.stop",
     StopAction,
     cv.Schema(
         {
-            cv.GenerateID(): cv.use_id(DFPlayer),
+            cv.GenerateID(): cv.use_id(DYPlayer),
         }
     ),
 )
-async def dfplayer_stop_to_code(config, action_id, template_arg, args):
+async def dyplayer_stop_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     return var
 
 
 @automation.register_action(
-    "dfplayer.random",
+    "dyplayer.random",
     RandomAction,
     cv.Schema(
         {
-            cv.GenerateID(): cv.use_id(DFPlayer),
+            cv.GenerateID(): cv.use_id(DYPlayer),
         }
     ),
 )
-async def dfplayer_random_to_code(config, action_id, template_arg, args):
+async def dyplayer_random_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     return var
 
 
 @automation.register_condition(
-    "dfplayer.is_playing",
-    DFPlayerIsPlayingCondition,
+    "dyplayer.is_playing",
+    DYPlayerIsPlayingCondition,
     cv.Schema(
         {
-            cv.GenerateID(): cv.use_id(DFPlayer),
+            cv.GenerateID(): cv.use_id(DYPlayer),
         }
     ),
 )
-async def dfplayer_is_playing_to_code(config, condition_id, template_arg, args):
+async def dyplayer_is_playing_to_code(config, condition_id, template_arg, args):
     var = cg.new_Pvariable(condition_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     return var
