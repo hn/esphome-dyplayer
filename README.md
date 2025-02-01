@@ -1,6 +1,6 @@
 # DY-Player component for ESPHome
 
-Adds basic support for DY-Player audio modules. 
+Adds basic support for DY-Player audio modules.
 Likely to work (untested) with DY-SV17F, DY-SV8F, DY-HV20T, DY-HV8F, DY-SV5W hardware.
 
 :raised_hand: This is just a quick hack. Basic functions (play, stop, volume, ...) work, all other things have been left untouched.
@@ -26,3 +26,7 @@ dyplayer:
 
 See [DF-Player docs](https://esphome.io/components/dfplayer.html) and adapt as needed.
 
+## Credits
+
+- [Chris Snijder](https://github.com/SnijderC) for [detailed DF-Player documentation and code](https://github.com/SnijderC/dyplayer).
+- [Guillermo Ruffino](https://github.com/glmnet) for the DF-Player component.
