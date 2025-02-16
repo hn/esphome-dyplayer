@@ -27,6 +27,17 @@ dyplayer:
 See [DF-Player docs](https://esphome.io/components/dfplayer.html) and adapt as needed.
 Some things may work, some certainly won't.
 
+## Noise when nothing is being played
+
+With the _apparently_ 10W/20W models (DY-HV20T, DY-HV8F) a quiet hiss is always audible when files are not playing.
+These use an `AP2001D` amplifier (sometimes additionally labeled `DY2435` or `DY2244`),
+which likely has no working `SD` pin to temporarily switch off (sleep) the chip.
+In any case, this is not correctly connected to the `BUSY` pin of the audio chip on the PCB.
+As no data sheet is available for the amplifier, none of this can be checked and the doubt can be raised
+as to whether it really delivers as good a performance as described by the dealers.
+
+The 5W models work with an `LTK5128D` amplifier, which is switched off correctly via the `SD` pin when not in use.
+
 ## Credits
 
 - [Chris Snijder](https://github.com/SnijderC) for [detailed DY-Player documentation and code](https://github.com/SnijderC/dyplayer).
