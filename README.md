@@ -31,3 +31,5 @@ Some things may work, some certainly won't.
 
 - [Chris Snijder](https://github.com/SnijderC) for [detailed DY-Player documentation and code](https://github.com/SnijderC/dyplayer).
 - [Guillermo Ruffino](https://github.com/glmnet) for the DF-Player component.
+- [smoluks](https://github.com/smoluks/DY-SV17F) has [docs and schematics for DY-Players](https://github.com/smoluks/DY-SV17F).
+- [Garry](https://garrysblog.com/) has done some [interesting research for the DF-Player](https://garrysblog.com/2022/06/12/mp3-dfplayer-notes-clones-noise-speakers-wrong-file-plays-and-no-library/).
