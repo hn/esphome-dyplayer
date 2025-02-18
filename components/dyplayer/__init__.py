@@ -43,7 +43,8 @@ PLAY_MODE = {
 Device = dyplayer_ns.enum("Device")
 DEVICE = {
     "USB": Device.USB,
-    "TF_CARD": Device.TF_CARD,
+    "SD_CARD": Device.SD_CARD,
+    "FLASH": Device.FLASH,
 }
 
 NextAction = dyplayer_ns.class_("NextAction", automation.Action)

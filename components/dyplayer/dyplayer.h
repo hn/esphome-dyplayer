@@ -29,8 +29,9 @@ enum PlayMode {
 };
 
 enum Device {
-  USB = 1,
-  TF_CARD = 2,
+  USB = 0,
+  SD_CARD = 1,
+  FLASH = 2,
 };
 
 // See the datasheet here:
