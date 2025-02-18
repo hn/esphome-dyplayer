@@ -17,11 +17,11 @@ void DYPlayer::previous() {
   ESP_LOGD(TAG, "Playing previous track");
   this->send_cmd_(0x05);
 }
-void DYPlayer::play_mp3(uint16_t file) {
-  ESP_LOGW(TAG, "NOT IMPLEMENTED: DF-Player leftover"); return; // TODO
+
+void DYPlayer::interlude_file(uint16_t file) {
   this->ack_set_is_playing_ = true;
-  ESP_LOGD(TAG, "Playing file %d in mp3 folder", file);
-  this->send_cmd_(0x12, file);
+  ESP_LOGD(TAG, "Interlude file %d", file);
+  this->send_cmd_(0x16, file);
 }
 
 void DYPlayer::play_file(uint16_t file) {

@@ -31,7 +31,7 @@ class DYPlayer : public uart::UARTDevice, public Component {
 
   void next();
   void previous();
-  void play_mp3(uint16_t file);
+  void interlude_file(uint16_t file);
   void play_file(uint16_t file);
   void play_file_loop(uint16_t file);
   void play_folder(uint16_t folder, uint16_t file);
@@ -93,13 +93,13 @@ class DYPlayer : public uart::UARTDevice, public Component {
 DYPLAYER_SIMPLE_ACTION(NextAction, next)
 DYPLAYER_SIMPLE_ACTION(PreviousAction, previous)
 
-template<typename... Ts> class PlayMp3Action : public Action<Ts...>, public Parented<DYPlayer> {
+template<typename... Ts> class InterludeFileAction : public Action<Ts...>, public Parented<DYPlayer> {
  public:
   TEMPLATABLE_VALUE(uint16_t, file)
 
   void play(Ts... x) override {
     auto file = this->file_.value(x...);
-    this->parent_->play_mp3(file);
+    this->parent_->interlude_file(file);
   }
 };
 
