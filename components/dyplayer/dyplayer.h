@@ -57,7 +57,7 @@ class DYPlayer : public uart::UARTDevice, public Component {
   void start();
   void pause();
   void stop();
-  void random();
+  void stop_interlude();
 
   bool is_playing() { return is_playing_; }
   void dump_config() override;
@@ -191,7 +191,7 @@ DYPLAYER_SIMPLE_ACTION(ResetAction, reset)
 DYPLAYER_SIMPLE_ACTION(StartAction, start)
 DYPLAYER_SIMPLE_ACTION(PauseAction, pause)
 DYPLAYER_SIMPLE_ACTION(StopAction, stop)
-DYPLAYER_SIMPLE_ACTION(RandomAction, random)
+DYPLAYER_SIMPLE_ACTION(StopInterludeAction, stop_interlude)
 DYPLAYER_SIMPLE_ACTION(VolumeUpAction, volume_up)
 DYPLAYER_SIMPLE_ACTION(VolumeDownAction, volume_down)
 

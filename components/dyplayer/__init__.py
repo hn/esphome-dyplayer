@@ -62,7 +62,7 @@ ResetAction = dyplayer_ns.class_("ResetAction", automation.Action)
 StartAction = dyplayer_ns.class_("StartAction", automation.Action)
 PauseAction = dyplayer_ns.class_("PauseAction", automation.Action)
 StopAction = dyplayer_ns.class_("StopAction", automation.Action)
-RandomAction = dyplayer_ns.class_("RandomAction", automation.Action)
+StopInterludeAction = dyplayer_ns.class_("StopInterludeAction", automation.Action)
 SetDeviceAction = dyplayer_ns.class_("SetDeviceAction", automation.Action)
 
 CONFIG_SCHEMA = cv.All(
@@ -385,15 +385,15 @@ async def dyplayer_stop_to_code(config, action_id, template_arg, args):
 
 
 @automation.register_action(
-    "dyplayer.random",
-    RandomAction,
+    "dyplayer.stop_interlude",
+    StopInterludeAction,
     cv.Schema(
         {
             cv.GenerateID(): cv.use_id(DYPlayer),
         }
     ),
 )
-async def dyplayer_random_to_code(config, action_id, template_arg, args):
+async def dyplayer_stop_interlude_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     return var

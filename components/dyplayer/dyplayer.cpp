@@ -97,11 +97,10 @@ void DYPlayer::stop() {
   this->send_cmd_(0x04);
 }
 
-void DYPlayer::random() {
-  ESP_LOGW(TAG, "NOT IMPLEMENTED: DF-Player leftover"); return; // TODO
+void DYPlayer::stop_interlude() {
   this->ack_set_is_playing_ = true;
-  ESP_LOGD(TAG, "Playing random file");
-  this->send_cmd_(0x18);
+  ESP_LOGD(TAG, "Stop interlude");
+  this->send_cmd_(0x10);
 }
 
 void DYPlayer::play_folder(uint16_t folder, uint16_t file) {
