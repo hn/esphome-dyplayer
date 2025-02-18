@@ -33,9 +33,8 @@ class DYPlayer : public uart::UARTDevice, public Component {
   void previous();
   void interlude_file(uint16_t file);
   void play_file(uint16_t file);
-  void play_file_loop(uint16_t file);
+  void select_file(uint16_t file);
   void play_folder(uint16_t folder, uint16_t file);
-  void play_folder_loop(uint16_t folder);
   void volume_up();
   void volume_down();
   void set_device(Device device);
@@ -106,16 +105,20 @@ template<typename... Ts> class InterludeFileAction : public Action<Ts...>, publi
 template<typename... Ts> class PlayFileAction : public Action<Ts...>, public Parented<DYPlayer> {
  public:
   TEMPLATABLE_VALUE(uint16_t, file)
-  TEMPLATABLE_VALUE(bool, loop)
 
   void play(Ts... x) override {
     auto file = this->file_.value(x...);
-    auto loop = this->loop_.value(x...);
-    if (loop) {
-      this->parent_->play_file_loop(file);
-    } else {
-      this->parent_->play_file(file);
-    }
+    this->parent_->play_file(file);
+  }
+};
+
+template<typename... Ts> class SelectFileAction : public Action<Ts...>, public Parented<DYPlayer> {
+ public:
+  TEMPLATABLE_VALUE(uint16_t, file)
+
+  void play(Ts... x) override {
+    auto file = this->file_.value(x...);
+    this->parent_->select_file(file);
   }
 };
 
@@ -123,17 +126,11 @@ template<typename... Ts> class PlayFolderAction : public Action<Ts...>, public P
  public:
   TEMPLATABLE_VALUE(uint16_t, folder)
   TEMPLATABLE_VALUE(uint16_t, file)
-  TEMPLATABLE_VALUE(bool, loop)
 
   void play(Ts... x) override {
     auto folder = this->folder_.value(x...);
     auto file = this->file_.value(x...);
-    auto loop = this->loop_.value(x...);
-    if (loop) {
-      this->parent_->play_folder_loop(folder);
-    } else {
-      this->parent_->play_folder(folder, file);
-    }
+    this->parent_->play_folder(folder, file);
   }
 };
 

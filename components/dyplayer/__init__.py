@@ -18,7 +18,6 @@ DYPlayerIsPlayingCondition = dyplayer_ns.class_(
 
 MULTI_CONF = True
 CONF_FOLDER = "folder"
-CONF_LOOP = "loop"
 CONF_EQ_PRESET = "eq_preset"
 CONF_ON_FINISHED_PLAYBACK = "on_finished_playback"
 
@@ -40,6 +39,7 @@ NextAction = dyplayer_ns.class_("NextAction", automation.Action)
 PreviousAction = dyplayer_ns.class_("PreviousAction", automation.Action)
 InterludeFileAction = dyplayer_ns.class_("InterludeFileAction", automation.Action)
 PlayFileAction = dyplayer_ns.class_("PlayFileAction", automation.Action)
+SelectFileAction = dyplayer_ns.class_("SelectFileAction", automation.Action)
 PlayFolderAction = dyplayer_ns.class_("PlayFolderAction", automation.Action)
 SetVolumeAction = dyplayer_ns.class_("SetVolumeAction", automation.Action)
 VolumeUpAction = dyplayer_ns.class_("VolumeUpAction", automation.Action)
@@ -138,7 +138,6 @@ async def dyplayer_interlude_file_to_code(config, action_id, template_arg, args)
         {
             cv.GenerateID(): cv.use_id(DYPlayer),
             cv.Required(CONF_FILE): cv.templatable(cv.int_),
-            cv.Optional(CONF_LOOP): cv.templatable(cv.boolean),
         },
         key=CONF_FILE,
     ),
@@ -148,9 +147,25 @@ async def dyplayer_play_to_code(config, action_id, template_arg, args):
     await cg.register_parented(var, config[CONF_ID])
     template_ = await cg.templatable(config[CONF_FILE], args, float)
     cg.add(var.set_file(template_))
-    if CONF_LOOP in config:
-        template_ = await cg.templatable(config[CONF_LOOP], args, float)
-        cg.add(var.set_loop(template_))
+    return var
+
+
+@automation.register_action(
+    "dyplayer.select",
+    SelectFileAction,
+    cv.maybe_simple_value(
+        {
+            cv.GenerateID(): cv.use_id(DYPlayer),
+            cv.Required(CONF_FILE): cv.templatable(cv.int_),
+        },
+        key=CONF_FILE,
+    ),
+)
+async def dyplayer_select_to_code(config, action_id, template_arg, args):
+    var = cg.new_Pvariable(action_id, template_arg)
+    await cg.register_parented(var, config[CONF_ID])
+    template_ = await cg.templatable(config[CONF_FILE], args, float)
+    cg.add(var.set_file(template_))
     return var
 
 
@@ -162,7 +177,6 @@ async def dyplayer_play_to_code(config, action_id, template_arg, args):
             cv.GenerateID(): cv.use_id(DYPlayer),
             cv.Required(CONF_FOLDER): cv.templatable(cv.int_),
             cv.Optional(CONF_FILE): cv.templatable(cv.int_),
-            cv.Optional(CONF_LOOP): cv.templatable(cv.boolean),
         }
     ),
 )
@@ -174,9 +188,6 @@ async def dyplayer_play_folder_to_code(config, action_id, template_arg, args):
     if CONF_FILE in config:
         template_ = await cg.templatable(config[CONF_FILE], args, float)
         cg.add(var.set_file(template_))
-    if CONF_LOOP in config:
-        template_ = await cg.templatable(config[CONF_LOOP], args, float)
-        cg.add(var.set_loop(template_))
     return var
 
 

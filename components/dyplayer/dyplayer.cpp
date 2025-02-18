@@ -30,18 +30,9 @@ void DYPlayer::play_file(uint16_t file) {
   this->send_cmd_(0x07, file);
 }
 
-void DYPlayer::play_file_loop(uint16_t file) {
-  ESP_LOGW(TAG, "NOT IMPLEMENTED: DF-Player leftover"); return; // TODO
-  this->ack_set_is_playing_ = true;
-  ESP_LOGD(TAG, "Playing file %d in loop", file);
-  this->send_cmd_(0x08, file);
-}
-
-void DYPlayer::play_folder_loop(uint16_t folder) {
-  ESP_LOGW(TAG, "NOT IMPLEMENTED: DF-Player leftover"); return; // TODO
-  this->ack_set_is_playing_ = true;
-  ESP_LOGD(TAG, "Playing folder %d in loop", folder);
-  this->send_cmd_(0x17, folder);
+void DYPlayer::select_file(uint16_t file) {
+  ESP_LOGD(TAG, "Selecting file %d", file);
+  this->send_cmd_(0x1f, file);
 }
 
 void DYPlayer::volume_up() {
