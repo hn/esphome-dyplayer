@@ -53,8 +53,8 @@ class DYPlayer : public uart::UARTDevice, public Component {
   void set_volume(uint8_t volume);
   void set_eq(EqPreset preset);
   void set_mode(PlayMode mode);
-  void sleep();
-  void reset();
+  void previous_folder_last();
+  void previous_folder_first();
   void start();
   void pause();
   void stop();
@@ -187,8 +187,8 @@ template<typename... Ts> class SetModeAction : public Action<Ts...>, public Pare
   }
 };
 
-DYPLAYER_SIMPLE_ACTION(SleepAction, sleep)
-DYPLAYER_SIMPLE_ACTION(ResetAction, reset)
+DYPLAYER_SIMPLE_ACTION(PreviousFolderLastAction, previous_folder_last)
+DYPLAYER_SIMPLE_ACTION(PreviousFolderFirstAction, previous_folder_first)
 DYPLAYER_SIMPLE_ACTION(StartAction, start)
 DYPLAYER_SIMPLE_ACTION(PauseAction, pause)
 DYPLAYER_SIMPLE_ACTION(StopAction, stop)

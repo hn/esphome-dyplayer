@@ -58,8 +58,8 @@ VolumeUpAction = dyplayer_ns.class_("VolumeUpAction", automation.Action)
 VolumeDownAction = dyplayer_ns.class_("VolumeDownAction", automation.Action)
 SetModeAction = dyplayer_ns.class_("SetModeAction", automation.Action)
 SetEqAction = dyplayer_ns.class_("SetEqAction", automation.Action)
-SleepAction = dyplayer_ns.class_("SleepAction", automation.Action)
-ResetAction = dyplayer_ns.class_("ResetAction", automation.Action)
+PreviousFolderLastAction = dyplayer_ns.class_("PreviousFolderLastAction", automation.Action)
+PreviousFolderFirstAction = dyplayer_ns.class_("PreviousFolderFirstAction", automation.Action)
 StartAction = dyplayer_ns.class_("StartAction", automation.Action)
 PauseAction = dyplayer_ns.class_("PauseAction", automation.Action)
 StopAction = dyplayer_ns.class_("StopAction", automation.Action)
@@ -311,30 +311,30 @@ async def dyplayer_set_mode_to_code(config, action_id, template_arg, args):
 
 
 @automation.register_action(
-    "dyplayer.sleep",
-    SleepAction,
+    "dyplayer.previous_folder_last",
+    PreviousFolderLastAction,
     cv.Schema(
         {
             cv.GenerateID(): cv.use_id(DYPlayer),
         }
     ),
 )
-async def dyplayer_sleep_to_code(config, action_id, template_arg, args):
+async def dyplayer_previous_folder_last_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     return var
 
 
 @automation.register_action(
-    "dyplayer.reset",
-    ResetAction,
+    "dyplayer.previous_folder_first",
+    PreviousFolderFirstAction,
     cv.Schema(
         {
             cv.GenerateID(): cv.use_id(DYPlayer),
         }
     ),
 )
-async def dyplayer_reset_to_code(config, action_id, template_arg, args):
+async def dyplayer_previous_folder_first_to_code(config, action_id, template_arg, args):
     var = cg.new_Pvariable(action_id, template_arg)
     await cg.register_parented(var, config[CONF_ID])
     return var

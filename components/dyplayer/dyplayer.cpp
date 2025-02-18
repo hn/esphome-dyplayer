@@ -65,18 +65,16 @@ void DYPlayer::set_mode(PlayMode mode) {
   this->send_cmd_(0x18, (uint8_t) mode);
 }
 
-void DYPlayer::sleep() {
-  ESP_LOGW(TAG, "NOT IMPLEMENTED: DF-Player leftover"); return; // TODO
+void DYPlayer::previous_folder_last() {
   this->ack_reset_is_playing_ = true;
-  ESP_LOGD(TAG, "Putting DYPlayer to sleep");
-  this->send_cmd_(0x0A);
+  ESP_LOGD(TAG, "Playing last track in previous folder");
+  this->send_cmd_(0x0e);
 }
 
-void DYPlayer::reset() {
-  ESP_LOGW(TAG, "NOT IMPLEMENTED: DF-Player leftover"); return; // TODO
+void DYPlayer::previous_folder_first() {
   this->ack_reset_is_playing_ = true;
-  ESP_LOGD(TAG, "Resetting DYPlayer");
-  this->send_cmd_(0x0C);
+  ESP_LOGD(TAG, "Playing first track in previous folder");
+  this->send_cmd_(0x0f);
 }
 
 void DYPlayer::start() {
