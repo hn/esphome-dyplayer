@@ -17,6 +17,17 @@ enum EqPreset {
   CLASSIC = 4,
 };
 
+enum PlayMode {
+  REPEAT = 0,
+  REPEATONE = 1,
+  ONEOFF = 2,
+  RANDOM = 3,
+  REPEATDIR = 4,
+  RANDOMDIR = 5,
+  SEQUENCEDIR = 6,
+  SEQUENCE = 7,
+};
+
 enum Device {
   USB = 1,
   TF_CARD = 2,
@@ -40,6 +51,7 @@ class DYPlayer : public uart::UARTDevice, public Component {
   void set_device(Device device);
   void set_volume(uint8_t volume);
   void set_eq(EqPreset preset);
+  void set_mode(PlayMode mode);
   void sleep();
   void reset();
   void start();
@@ -161,6 +173,16 @@ template<typename... Ts> class SetEqAction : public Action<Ts...>, public Parent
   void play(Ts... x) override {
     auto eq = this->eq_.value(x...);
     this->parent_->set_eq(eq);
+  }
+};
+
+template<typename... Ts> class SetModeAction : public Action<Ts...>, public Parented<DYPlayer> {
+ public:
+  TEMPLATABLE_VALUE(PlayMode, mode)
+
+  void play(Ts... x) override {
+    auto mode = this->mode_.value(x...);
+    this->parent_->set_mode(mode);
   }
 };
 

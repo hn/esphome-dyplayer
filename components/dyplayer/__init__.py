@@ -1,7 +1,7 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome import automation
-from esphome.const import CONF_ID, CONF_TRIGGER_ID, CONF_FILE, CONF_DEVICE, CONF_VOLUME
+from esphome.const import CONF_ID, CONF_TRIGGER_ID, CONF_FILE, CONF_DEVICE, CONF_VOLUME, CONF_MODE
 from esphome.components import uart
 
 DEPENDENCIES = ["uart"]
@@ -29,6 +29,17 @@ EQ_PRESET = {
     "JAZZ": EqPreset.JAZZ,
     "CLASSIC": EqPreset.CLASSIC,
 }
+PlayMode = dyplayer_ns.enum("PlayMode")
+PLAY_MODE = {
+    "REPEAT": PlayMode.REPEAT,
+    "REPEATONE": PlayMode.REPEATONE,
+    "ONEOFF": PlayMode.ONEOFF,
+    "RANDOM": PlayMode.RANDOM,
+    "REPEATDIR": PlayMode.REPEATDIR,
+    "RANDOMDIR": PlayMode.RANDOMDIR,
+    "SEQUENCEDIR": PlayMode.SEQUENCEDIR,
+    "SEQUENCE": PlayMode.SEQUENCE,
+}
 Device = dyplayer_ns.enum("Device")
 DEVICE = {
     "USB": Device.USB,
@@ -44,6 +55,7 @@ PlayFolderAction = dyplayer_ns.class_("PlayFolderAction", automation.Action)
 SetVolumeAction = dyplayer_ns.class_("SetVolumeAction", automation.Action)
 VolumeUpAction = dyplayer_ns.class_("VolumeUpAction", automation.Action)
 VolumeDownAction = dyplayer_ns.class_("VolumeDownAction", automation.Action)
+SetModeAction = dyplayer_ns.class_("SetModeAction", automation.Action)
 SetEqAction = dyplayer_ns.class_("SetEqAction", automation.Action)
 SleepAction = dyplayer_ns.class_("SleepAction", automation.Action)
 ResetAction = dyplayer_ns.class_("ResetAction", automation.Action)
@@ -275,6 +287,25 @@ async def dyplayer_set_eq_to_code(config, action_id, template_arg, args):
     await cg.register_parented(var, config[CONF_ID])
     template_ = await cg.templatable(config[CONF_EQ_PRESET], args, EqPreset)
     cg.add(var.set_eq(template_))
+    return var
+
+
+@automation.register_action(
+    "dyplayer.set_mode",
+    SetModeAction,
+    cv.maybe_simple_value(
+        {
+            cv.GenerateID(): cv.use_id(DYPlayer),
+            cv.Required(CONF_MODE): cv.templatable(cv.enum(PLAY_MODE, upper=True)),
+        },
+        key=CONF_MODE,
+    ),
+)
+async def dyplayer_set_mode_to_code(config, action_id, template_arg, args):
+    var = cg.new_Pvariable(action_id, template_arg)
+    await cg.register_parented(var, config[CONF_ID])
+    template_ = await cg.templatable(config[CONF_MODE], args, PlayMode)
+    cg.add(var.set_mode(template_))
     return var
 
 

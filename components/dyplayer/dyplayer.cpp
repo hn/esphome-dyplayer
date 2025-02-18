@@ -60,6 +60,11 @@ void DYPlayer::set_eq(EqPreset preset) {
   this->send_cmd_(0x1a, (uint8_t) preset);
 }
 
+void DYPlayer::set_mode(PlayMode mode) {
+  ESP_LOGD(TAG, "Setting mode to %d", mode);
+  this->send_cmd_(0x18, (uint8_t) mode);
+}
+
 void DYPlayer::sleep() {
   ESP_LOGW(TAG, "NOT IMPLEMENTED: DF-Player leftover"); return; // TODO
   this->ack_reset_is_playing_ = true;
